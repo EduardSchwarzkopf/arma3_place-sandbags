@@ -24,7 +24,7 @@ getSandbagAction = {
 	player getVariable "SandbagAction";
 };
  
-putSandbagAction = player addAction ["<t color='#20a01b'>Place Sandbag</t>", { 
+putSandbagAction = player addAction ["Place Sandbag", { 
   
 	call addCancelSandbagAction;
 	player setVariable ["SandbagAction", true];
