@@ -1,3 +1,6 @@
+// Author: shinySonic
+// Credits: Regimental Combat Team 7
+
 removeSandbagAction = ["<t color='#a01b1b'>Remove Sandbag</t>", {
     _unit = _this select 1;
     [_this select 0, _this select 2] remoteExec ["removeAction", 0, true];
