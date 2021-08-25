@@ -1,6 +1,5 @@
 // Author: shinySonic
 // Credits: Regimental Combat Team 7
-
 removeSandbagAction = ["<t color='#a01b1b'>Remove Sandbag</t>", {
     _unit = _this select 1;
     [_this select 0, _this select 2] remoteExec ["removeAction", 0, true];
@@ -12,24 +11,26 @@ removeSandbagAction = ["<t color='#a01b1b'>Remove Sandbag</t>", {
     deleteVehicle (_this select 0);
 }];
  
-removeCancelSandbagAction = {
-	player removeAction cancelSandbagAction;
-};
-
-addCancelSandbagAction = {
-	cancelSandbagAction = player addAction ["Cancel Sandbag", {player setVariable ["SandbagAction", false];}];
-};
-
 getSandbagAction = {
-	player getVariable "SandbagAction";
+	player getVariable ["SandbagAction", false];
 };
- 
-putSandbagAction = player addAction ["Place Sandbag", { 
-  
-	call addCancelSandbagAction;
-	player setVariable ["SandbagAction", true];
-    _anim = "AinvPknlMstpSnonWnonDnon_Putdown_AmovPknlMstpSnonWnonDnon"; 
-  
+
+setSandbagAction = {
+	player setVariable ["SandbagAction", _this];
+};
+
+
+while {alive player} do {
+	// Set Custom Control 8 to set Sandbags
+	waitUntil {inputAction "User8" > 0 && !(call getSandbagAction)};
+	
+	_cancelSandbagAction = player addAction ["Cancel Sandbag", {false call setSandbagAction;}];
+	true call setSandbagAction;
+    _anim = "AinvPknlMstpSnonWnonDnon_medic_1"; 
+	
+	_animStart = "AmovPknlMstpSnonWnonDnon";
+	player playMove _animStart;
+	waitUntil {animationState player == _animStart};	
     player playMove _anim; 
     waitUntil {animationState player == _anim || !alive player};  
     waitUntil {animationState player != _anim || !alive player}; 
@@ -47,6 +48,7 @@ putSandbagAction = player addAction ["Place Sandbag", {
 		[_veh, removeSandbagAction] remoteExec ["addAction", side player, true]; 
 	};
 	
-	call removeCancelSandbagAction;
-
-}];
+	player removeAction _cancelSandbagAction;
+	sleep 3;
+	false call setSandbagAction;
+}
