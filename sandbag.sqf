@@ -1,5 +1,6 @@
 // Author: shinySonic
 // Credits: Regimental Combat Team 7
+
 removeSandbagAction = ["<t color='#a01b1b'>Remove Sandbag</t>", {
     _unit = _this select 1;
     [_this select 0, _this select 2] remoteExec ["removeAction", 0, true];
@@ -26,16 +27,16 @@ while {alive player} do {
 	
 	_cancelSandbagAction = player addAction ["Cancel Sandbag", {false call setSandbagAction;}];
 	true call setSandbagAction;
-    _anim = "AinvPknlMstpSnonWnonDnon_medic_1"; 
+    	_anim = "AinvPknlMstpSnonWnonDnon_medic_1"; 
 	
 	_animStart = "AmovPknlMstpSnonWnonDnon";
 	player playMove _animStart;
 	waitUntil {animationState player == _animStart};	
-    player playMove _anim; 
-    waitUntil {animationState player == _anim || !alive player};  
-    waitUntil {animationState player != _anim || !alive player}; 
+	player playMove _anim; 
+	waitUntil {animationState player == _anim || !alive player};  
+	waitUntil {animationState player != _anim || !alive player}; 
 	
-    if (alive player && call getSandbagAction) then {
+	if (alive player && call getSandbagAction) then {
 	  
 		_veh = createVehicle ["Land_BagFence_01_round_green_F", player modelToWorld [0, 1.5, 0], [], 0, "CAN_COLLIDE"]; 
 		_veh setDir (getDir player)-180; 
