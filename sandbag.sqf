@@ -20,14 +20,26 @@ setSandbagAction = {
 	player setVariable ["SandbagAction", _this];
 };
 
+canPlaceSandbag = {
+	_result = true;
+	if ( !( isNull objectParent player) || player getVariable ["ais_unconscious", false] ) then {
+		_result = false;	
+	};
+	
+	_result;
+};
+
 
 while {alive player} do {
 	// Set Custom Control 8 to set Sandbags
+	
 	waitUntil {inputAction "User8" > 0 && !(call getSandbagAction)};
+	
+	if !(call canPlaceSandbag) then {continue};
 	
 	_cancelSandbagAction = player addAction ["Cancel Sandbag", {false call setSandbagAction;}];
 	true call setSandbagAction;
-    	_anim = "AinvPknlMstpSnonWnonDnon_medic_1"; 
+		_anim = "AinvPknlMstpSnonWnonDnon_medic_1"; 
 	
 	_animStart = "AmovPknlMstpSnonWnonDnon";
 	player playMove _animStart;
@@ -37,15 +49,15 @@ while {alive player} do {
 	waitUntil {animationState player != _anim || !alive player}; 
 	
 	if (alive player && call getSandbagAction) then {
-	  
+		
 		_veh = createVehicle ["Land_BagFence_01_round_green_F", player modelToWorld [0, 1.5, 0], [], 0, "CAN_COLLIDE"]; 
 		_veh setDir (getDir player)-180; 
-		 if (round (getPosATL player select 2) == 0) then { 
-		  _veh setPosATL [getPosATL _veh select 0, getPosATL _veh select 1, 0]; 
-		  _veh setVectorUp surfaceNormal position _veh; 
-		 }; 
-		  
-	  
+			if (round (getPosATL player select 2) == 0) then { 
+			_veh setPosATL [getPosATL _veh select 0, getPosATL _veh select 1, 0]; 
+			_veh setVectorUp surfaceNormal position _veh; 
+			}; 
+			
+		
 		[_veh, removeSandbagAction] remoteExec ["addAction", side player, true]; 
 	};
 	
